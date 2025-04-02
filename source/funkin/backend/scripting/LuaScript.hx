@@ -4,6 +4,7 @@ package funkin.backend.scripting;
 import funkin.backend.scripting.lua.utils.ILuaScriptable;
 import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.lua.*;
+import mobile.funkin.backend.scripting.lua.*;
 
 import haxe.DynamicAccess;
 
@@ -171,6 +172,10 @@ class LuaScript extends Script{
 			addCallback(k, e);
 		for (k => e in OptionsVariables.getOptionsVariables(this))
 			set(k, e);
+		for (k => e in MobileFunctions.getMobileFunctions(parent.instance, this))
+			addCallback(k, e);
+		for (k => e in AndroidFunctions.getAndroidFunctions(parent.instance, this))
+			addCallback(k, e);
 	}
 
 	public function event<T:CancellableEvent>(func:String, event:T):T {
