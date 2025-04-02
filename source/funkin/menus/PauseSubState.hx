@@ -55,7 +55,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		add(parentDisabler = new FunkinParentDisabler());
 
-		pauseScript = Script.create(Paths.script(script));
+		pauseScript = Script.create(Paths.script(script) #if ENABLE_LUA , true, {instance: this, parent: this} #end);
 		pauseScript.setParent(this);
 		pauseScript.load();
 

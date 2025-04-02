@@ -5,6 +5,8 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.io.Path;
 import hscript.IHScriptCustomConstructor;
 import flixel.util.FlxStringUtil;
+import funkin.backend.scripting.lua.utils.ILuaScriptable;
+import funkin.backend.scripting.LuaScript.ParentObject;
 
 @:allow(funkin.backend.scripting.ScriptPack)
 /**
@@ -109,9 +111,9 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * All available script extensions
 	 */
 	public static var scriptExtensions:Array<String> = [
-		"hx", "hscript", "hsc", "hxs",
+		"hx", "hscript", "hsc", "hxs", "hxc",
 		"pack", // combined file
-		"lua" /** ACTUALLY NOT SUPPORTED, ONLY FOR THE MESSAGE **/
+		"lua"
 	];
 
 	/**
@@ -144,17 +146,26 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * Creates a script from the specified asset path. The language is automatically determined.
 	 * @param path Path in assets
 	 */
-	public static function create(path:String):Script {
+	public static function create(path:String, ?useLua:Bool = false, ?parent:ParentObject):Script {
 		if (Assets.exists(path)) {
 			return switch(Path.extension(path).toLowerCase()) {
-				case "hx" | "hscript" | "hsc" | "hxs":
+				case "hx" | "hscript" | "hsc" | "hxs" | "hxc":
 					new HScript(path);
 				case "pack":
 					var arr = Assets.getText(path).split("________PACKSEP________");
 					fromString(arr[1], arr[0]);
 				case "lua":
+					#if ENABLE_LUA
+					if(useLua)
+						new LuaScript(path, parent);
+					else {
+						Logs.trace("Lua not available. Use HScript instead.", ERROR);
+						new DummyScript(path);
+					}
+					#else
 					Logs.trace("Lua is not supported in this engine. Use HScript instead.", ERROR);
 					new DummyScript(path);
+					#end
 				default:
 					new DummyScript(path);
 			}
@@ -167,13 +178,22 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * @param code code
 	 * @param path filename
 	 */
-	public static function fromString(code:String, path:String):Script {
+	public static function fromString(code:String, path:String, ?useLua:Bool = false, ?parent:ParentObject):Script {
 		return switch(Path.extension(path).toLowerCase()) {
-			case "hx" | "hscript" | "hsc" | "hxs":
+			case "hx" | "hscript" | "hsc" | "hxs" | "hxc":
 				new HScript(path).loadFromString(code);
 			case "lua":
+				#if ENABLE_LUA
+				if(useLua)
+					new LuaScript(path, parent).loadFromString(code);
+				else {
+					Logs.trace("Lua not available. Use HScript instead.", ERROR);
+					new DummyScript(path).loadFromString(code);
+				}
+				#else
 				Logs.trace("Lua is not supported in this engine. Use HScript instead.", ERROR);
 				new DummyScript(path).loadFromString(code);
+				#end
 			default:
 				new DummyScript(path).loadFromString(code);
 		}
@@ -252,7 +272,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * @param parameters (Optional) Parameters of the function.
 	 * @return Result (if void, then null)
 	 */
-	public function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
+	public function call(func:String, ?parameters:Array<Dynamic>, ?onlyHaxe:Bool = false):Dynamic {
 		var oldScript = curScript;
 		curScript = this;
 

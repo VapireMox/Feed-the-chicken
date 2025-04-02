@@ -352,7 +352,7 @@ class XMLImportedScriptInfo {
 		if (!folder.endsWith("/")) folder += "/";
 
 		var path = Paths.script(folder + node.getAtt("script"));
-		var daScript = Script.create(path);
+		var daScript = Script.create(path #if ENABLE_LUA , true, {instance: cast FlxG.state, parent: parentScriptPack.parent} #end);
 		if (daScript is DummyScript) {
 			Logs.trace('Script Extension at ${path} does not exist.', ERROR);
 			return null;

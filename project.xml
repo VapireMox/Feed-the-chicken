@@ -148,6 +148,9 @@
 	<!-- Comment this out to disable support for Nape integration (flixel.addons.nape) (reduces compile times) !-->
 	<define name="NAPE_ENABLED" />
 
+	<!-- Comment this out to disable the use of luajit. !-->
+	<define name="ENABLE_LUA" if="desktop || mobile"/>
+
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<section if="cpp">
 		<define name="VIDEO_CUTSCENES" if="desktop || mobile" />
@@ -158,6 +161,9 @@
 
 	<!-- Comment this out to disable dark mode windows -->
 	<define name="DARK_MODE_WINDOW"/>
+
+	<!-- Comment this out to disable modchart features -->
+	<define name="MODCHARTING_FEATURES"/>
 
 	<!-- Disable a optimization, to allow reflection to use more functions -->
 	<define name="FLX_NO_GENERIC" />
@@ -173,6 +179,8 @@
 	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
 
 	<haxedef name="EXPERIMENTAL_FLXGRAPHIC_DESTROY_FIX" />
+
+	<haxedef name="MODCHARTING_FEATURES" if="MODCHARTING_FEATURES"/>
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
@@ -193,10 +201,20 @@
 	<haxelib name="nape-haxe4" if="NAPE_ENABLED"/>
 
 	<haxelib name="hscript-improved" />
+	<haxelib name="linc_luajit" if="ENABLE_LUA" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
 
+	<haxelib name="FunkinModchart" if="MODCHARTING_FEATURES"/>
+
 	<!-- _________________________________ Additional stuff _______________________________ -->
+
+	<section if="MODCHARTING_FEATURES">
+		<haxedef name="FM_ENGINE" value="CODENAME"/>
+		<haxedef name="FM_ENGINE_VERSION" value="1.5.3"/>
+
+		<haxeflag name="--macro" value="modchart.core.macros.Macro.includeFiles()"/>
+	</section>
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />

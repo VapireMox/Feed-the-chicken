@@ -32,6 +32,13 @@ class OptionsMenu extends TreeMenu {
 			state: MobileOptions
 		},
 		#end
+		#if MODCHARTING_FEATURES
+		{
+			name: 'Modchart Settings >',
+			desc: 'Customize your modcharting experience...',
+			state: ModchartingOptions
+		},
+		#end
 		{
 			name: 'Miscellaneous >',
 			desc: 'Use this menu to reset save data or engine settings.',

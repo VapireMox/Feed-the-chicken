@@ -10,9 +10,13 @@ import funkin.backend.assets.Paths;
 using StringTools;
 
 class EventsData {
-	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "Add Camera Zoom", "Camera Modulo Change", "Camera Flash", "BPM Change", "Scroll Speed Change", "Alt Animation Toggle", "Play Animation"];
+	public static var defaultEventsList:Array<String> = ["HScript Call", "Lua Call", "Camera Movement", "Add Camera Zoom", "Camera Modulo Change", "Camera Flash", "BPM Change", "Scroll Speed Change", "Alt Animation Toggle", "Play Animation"];
 	public static var defaultEventsParams:Map<String, Array<EventParamInfo>> = [
 		"HScript Call" => [
+			{name: "Function Name", type: TString, defValue: "myFunc"},
+			{name: "Function Parameters (String split with commas)", type: TString, defValue: ""}
+		],
+		"Lua Call" => [
 			{name: "Function Name", type: TString, defValue: "myFunc"},
 			{name: "Function Parameters (String split with commas)", type: TString, defValue: ""}
 		],
@@ -75,7 +79,7 @@ class EventsData {
 		hscriptParser.allowJSON = hscriptParser.allowMetadata = false;
 
 		for (file in Paths.getFolderContent('data/events/', true, BOTH)) {
-			if (Path.extension(file) != "json" && Path.extension(file) != "pack") continue;
+			if (Path.extension(file) != "json" && Path.extension(file) != "pack" || Path.extension(file) == "lua") continue;
 			var eventName:String = Path.withoutExtension(Path.withoutDirectory(file));
 			var fileTxt:String = Assets.getText(file);
 

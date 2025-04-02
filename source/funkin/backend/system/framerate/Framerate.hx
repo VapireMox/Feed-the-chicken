@@ -81,6 +81,9 @@ class Framerate extends Sprite {
 		#end
 		__addCategory(new ConductorInfo());
 		__addCategory(new FlixelInfo());
+		#if ENABLE_LUA
+		__addCategory(new LuaInfo());
+		#end
 		__addCategory(new SystemInfo());
 		__addCategory(new AssetTreeInfo());
 
@@ -158,6 +161,7 @@ class Framerate extends Sprite {
 		}
 
 		var y:Float = height + 4;
+
 		for(c in categories) {
 			c.title.selectable = c.text.selectable = selectable;
 			c.alpha = debugAlpha;

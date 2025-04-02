@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.backend.scripting.lua.LuaTools;
 import funkin.backend.chart.Chart;
 import funkin.backend.chart.ChartData.ChartMetaData;
 import funkin.backend.system.Conductor;

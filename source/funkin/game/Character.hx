@@ -76,9 +76,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml = getXMLFromCharName(this);
 
 		if(!disableScripts)
-			script = Script.create(Paths.script(Path.withoutExtension(Paths.xml('characters/$curCharacter')), null, true));
+			script = Script.create(Paths.script(Path.withoutExtension(Paths.xml('characters/$curCharacter')), null, true) #if ENABLE_LUA , true, {instance: cast FlxG.state, parent: this} #end);
 		else
 			script = new DummyScript(curCharacter);
+		//script.setParent(this);
 		script.load();
 
 		buildCharacter(xml);

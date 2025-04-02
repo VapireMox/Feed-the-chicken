@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.backend.scripting.lua.LuaTools;
 import funkin.editors.charter.CharterSelection;
 import flixel.FlxState;
 import funkin.editors.SaveWarning;
@@ -617,7 +618,7 @@ class PlayState extends MusicBeatState
 							if (folder == 'data/charts/')
 								Logs.trace('data/charts/ is deprecrated and will be removed in the future. Please move script $file to songs/', WARNING, DARKYELLOW);
 
-							addScript(file);
+							addScript(file, #if ENABLE_LUA true #else false #end); // true to use Lua
 						}
 					}
 
@@ -627,7 +628,7 @@ class PlayState extends MusicBeatState
 					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
 						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
 						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) {
-							addScript(file);
+							addScript(file, #if ENABLE_LUA true #else false #end);
 						}
 					}
 			}
@@ -656,7 +657,7 @@ class PlayState extends MusicBeatState
 		for(noteType in SONG.noteTypes) {
 			var scriptPath = Paths.script('data/notes/${noteType}');
 			if (Assets.exists(scriptPath) && !scripts.contains(scriptPath)) {
-				var script = Script.create(scriptPath);
+				var script = Script.create(scriptPath #if ENABLE_LUA , true, {instance: this, parent: this} #end);
 				if (!(script is DummyScript)) {
 					scripts.add(script);
 					script.load();
@@ -1360,7 +1361,8 @@ class PlayState extends MusicBeatState
 		#end
 
 		super.update(elapsed);
-
+		scripts.luaSet('curStepFloat', this.curStepFloat);
+		scripts.luaSet('curBeatFloat', this.curBeatFloat);
 		scripts.call("postUpdate", [elapsed]);
 	}
 
@@ -1397,11 +1399,20 @@ class PlayState extends MusicBeatState
 
 				//static functions
 				if (Script.staticVariables.exists(event.params[0])) {
+
 					var func = Script.staticVariables.get(event.params[0]);
 					if (func != null && Reflect.isFunction(func))
 						Reflect.callMethod(null, func, args);
 				}
-
+			case "Lua Call":
+				var scriptPacks:Array<ScriptPack> = [scripts, stateScripts];
+ 				for (strLine in strumLines.members) for (char in strLine.characters) scriptPacks.push(char.scripts);
+ 				var args:Array<String> = event.params[1].split(',');
+				
+				for (pack in scriptPacks) {
+					pack.luaCall(event.params[0], args);
+				}
+				//scripts.luaCall(event.params[0], event.params[1].split(','));
 			case "Camera Movement":
 				curCameraTarget = event.params[0];
 			case "Add Camera Zoom":
@@ -1567,6 +1578,7 @@ class PlayState extends MusicBeatState
 			else
 			{
 				trace('LOADING NEXT SONG');
+				scripts.call('onNextSong');
 				trace(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 
 				registerSmoothTransition();
@@ -1843,6 +1855,7 @@ class PlayState extends MusicBeatState
 	override function stepHit(curStep:Int)
 	{
 		super.stepHit(curStep);
+		scripts.luaSet('curStep', curStep);
 		scripts.call("stepHit", [curStep]);
 	}
 
@@ -1850,6 +1863,7 @@ class PlayState extends MusicBeatState
 	override function measureHit(curMeasure:Int)
 	{
 		super.measureHit(curMeasure);
+		scripts.luaSet('curMeasure', curMeasure);
 		scripts.call("measureHit", [curMeasure]);
 	}
 
@@ -1873,14 +1887,14 @@ class PlayState extends MusicBeatState
 			iconP1.updateHitbox();
 			iconP2.updateHitbox();
 		}
-
+		scripts.luaSet('curBeat', curBeat);
 		scripts.call("beatHit", [curBeat]);
 	}
 
-	public function addScript(file:String) {
+	public function addScript(file:String, ?useLua:Bool = false) {
 		var ext = Path.extension(file).toLowerCase();
 		if (Script.scriptExtensions.contains(ext))
-			scripts.add(Script.create(file));
+			scripts.add(Script.create(file #if ENABLE_LUA , useLua, {instance: this, parent: this} #end));
 	}
 
 	// GETTERS & SETTERS

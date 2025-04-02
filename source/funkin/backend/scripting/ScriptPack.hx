@@ -1,5 +1,6 @@
 package funkin.backend.scripting;
 
+import funkin.backend.scripting.lua.LuaTools;
 import flixel.util.FlxStringUtil;
 import funkin.backend.scripting.events.CancellableEvent;
 
@@ -51,10 +52,23 @@ class ScriptPack extends Script {
 		return script;
 	}
 
-	public override function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
-		for(e in scripts)
-			if(e.active)
+	public override function call(func:String, ?parameters:Array<Dynamic>, ?onlyHaxe:Bool = false):Dynamic {
+		for(e in scripts) {
+			if(e is LuaScript && onlyHaxe) continue;
+			if(e.active) 
 				e.call(func, parameters);
+		}
+		return null;
+	}
+
+	public function luaCall(func:String, ?parameters:Array<Dynamic>):Dynamic {
+		#if ENABLE_LUA
+		for(e in scripts) {
+			if(e is LuaScript && e.active) {
+				e.call(func, parameters);
+			}	
+		}
+		#end
 		return null;
 	}
 
@@ -67,7 +81,7 @@ class ScriptPack extends Script {
 	public inline function event<T:CancellableEvent>(func:String, event:T):T {
 		for(e in scripts) {
 			if(!e.active) continue;
-
+			//if(e is LuaScript) continue;
 			e.call(func, [event]);
 			if (event.cancelled && !event.__continueCalls) break;
 		}
@@ -87,7 +101,17 @@ class ScriptPack extends Script {
 	}
 
 	public override function set(val:String, value:Dynamic) {
-		for(e in scripts) e.set(val, value);
+		for(e in scripts){
+			if(e is LuaScript) continue;
+			e.set(val, value);
+		} 
+	}
+
+	public function luaSet(val:String, value:Dynamic) {
+		for(e in scripts) {
+			if(!(e is LuaScript)) continue;
+			e.set(val, value);
+		}
 	}
 
 	public override function setParent(parent:Dynamic) {
@@ -119,7 +143,25 @@ class ScriptPack extends Script {
 	private function __configureNewScript(script:Script) {
 		if (parent != null) script.setParent(parent);
 		script.setPublicMap(publicVariables);
-		for(k=>e in additionalDefaultVariables) script.set(k, e);
+		for(k=>e in additionalDefaultVariables) {
+			if(script is LuaScript)
+				switch(k) {
+					case "importScript":
+						cast(script, LuaScript).addCallback(k, function(path:String, ?useLua:Bool = false) {
+							var script = Script.create(Paths.script(path), useLua);
+							if (script is DummyScript)
+							{
+								Logs.trace('Script at ${path} does not exist.', ERROR);
+								return;
+							}
+							add(script);
+							script.load();
+							return;
+						});
+				}
+			else
+				script.set(k, e);
+		}
 	}
 
 	override public function toString():String {

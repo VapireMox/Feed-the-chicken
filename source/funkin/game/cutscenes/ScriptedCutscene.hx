@@ -15,7 +15,8 @@ class ScriptedCutscene extends Cutscene {
 	public function new(scriptPath:String, callback:Void->Void) {
 		super(callback);
 
-		script = Script.create(this.scriptPath = scriptPath);
+		this.scriptPath = scriptPath;
+		script = Script.create(scriptPath #if ENABLE_LUA , true, {instance: this, parent: this} #end);
 		script.setPublicMap(PlayState.instance.scripts.publicVariables);
 		script.setParent(this);
 		script.load();

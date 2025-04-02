@@ -1,6 +1,7 @@
 package funkin.backend;
 
 import flixel.FlxState;
+import funkin.backend.scripting.lua.utils.ILuaScriptable;
 import funkin.backend.scripting.events.*;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.ScriptPack;
@@ -18,7 +19,7 @@ import flixel.FlxCamera;
 import flixel.util.FlxDestroyUtil;
 #end
 
-class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
+class MusicBeatSubstate extends FlxSubState implements IBeatReceiver implements ILuaScriptable
 {
 	public static var instance:MusicBeatSubstate;
 	private var lastBeat:Float = 0;
@@ -76,6 +77,24 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	public var scriptsAllowed:Bool = true;
 
 	public var scriptName:String = null;
+
+	#if ENABLE_LUA
+	public var luaScriptsAllowed:Bool = true;
+	/**
+	 * Map containing all the objects created from Lua
+	 */
+	public var luaObjects(default, never):Map<String, Map<String, Dynamic>> = [
+		"SPRITE" => new Map<String, flixel.FlxSprite>(),
+		"TEXT" => new Map<String, flixel.FlxSprite>(),
+		"TWEEN" => new Map<String, flixel.tweens.FlxTween>(),
+		"SHADER" => new Map<String, funkin.backend.shaders.FunkinShader>(),
+		"TIMERS" => new Map<String, flixel.util.FlxTimer>(),
+		"SOUNDS" => new Map<String, flixel.sound.FlxSound>(),
+		"VIDEOS" => new Map<String, hxvlc.flixel.FlxVideoSprite>(),
+		"SCRIPTS" => new Map<String, funkin.backend.scripting.LuaScript.LuaHScript>(),
+		"CAMERA" => new Map<String, flixel.FlxCamera>()
+	];
+	#end
 
 	/**
 	 * Game Controls. (All players / Solo)
@@ -186,12 +205,22 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		call("destroy");
 		stateScripts = FlxDestroyUtil.destroy(stateScripts);
 
+		for(map in luaObjects) {
+			for(obj in map) {
+				if(obj is IFlxDestroyable)
+					obj = FlxDestroyUtil.destroy(obj);
+				else
+					obj = null;
+			}
+			map.clear();
+		}
 	}
 
-	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
+	public function new(scriptsAllowed:Bool = true, ?scriptName:String, ?luaScriptsAllowed:Bool = true) {
 		instance = this;
 		super();
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
+		#if ENABLE_LUA this.luaScriptsAllowed =  luaScriptsAllowed #end;
 		this.scriptName = scriptName;
 	}
 
@@ -204,7 +233,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
 				for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
 					var path = Paths.script('data/states/${scriptName}/LIB_$i');
-					var script = Script.create(path);
+					var script = Script.create(path #if ENABLE_LUA , luaScriptsAllowed, {instance: this, parent: this} #end);
 					if (script is DummyScript) continue;
 					script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 					stateScripts.add(script);
@@ -366,5 +395,9 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 			return;
 		}
 		super.resetSubState();
+	}
+
+	public function getInstance():Dynamic {
+		return this;
 	}
 }
