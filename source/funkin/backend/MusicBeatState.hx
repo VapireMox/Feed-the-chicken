@@ -14,8 +14,8 @@ import funkin.backend.system.Conductor;
 import funkin.options.PlayerSettings;
 #if TOUCH_CONTROLS
 import mobile.funkin.backend.utils.MobileData;
-import mobile.objects.Hitbox;
-import mobile.objects.TouchPad;
+import mobile.extra.Hitbox;
+import mobile.extra.TouchPad;
 import flixel.FlxCamera;
 import flixel.util.FlxDestroyUtil;
 #end
