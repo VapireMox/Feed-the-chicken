@@ -120,6 +120,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	public var hitbox:Hitbox;
 	public var hboxCam:FlxCamera;
 	public var tpadCam:FlxCamera;
+
+	public var extraMode:Bool = false;
 	#end
 
 	public function addTouchPad(DPad:String, Action:String)
@@ -149,7 +151,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 
 	public function addHitbox(?defaultDrawTarget:Bool = false) {
 		#if TOUCH_CONTROLS
-		hitbox = new Hitbox();
+		hitbox = new Hitbox(extraMode);
 
 		hboxCam = new FlxCamera();
 		hboxCam.bgColor.alpha = 0;

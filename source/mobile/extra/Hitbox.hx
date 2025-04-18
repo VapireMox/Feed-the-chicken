@@ -68,18 +68,18 @@ class Hitbox extends MobileInputManager
 				storedButtonsIDs.set(button, Reflect.getProperty(field, 'IDs'));
 		}
 
-		if(extraMode) {
+		if(!extraMode) {
 			add(buttonLeft = createHint(0, 0, Std.int(FlxG.width / 4), FlxG.height, 0xFFC24B99));
 			add(buttonDown = createHint(FlxG.width / 4, 0, Std.int(FlxG.width / 4), FlxG.height, 0xFF00FFFF));
 			add(buttonUp = createHint(FlxG.width / 2, 0, Std.int(FlxG.width / 4), FlxG.height, 0xFF12FA05));
 			add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), 0, Std.int(FlxG.width / 4), FlxG.height, 0xFFF9393F));
 		}else {
-			final fir:Int = (hitboxPos ? 0 : Std.int(FlxG.width / 4));
-			final oes:Int = (hitboxPos ? Std.int(FlxG.height - FlxG.width / 4) : 0);
-			add(buttonLeft = createHint(0, fir, Std.int(FlxG.width / 4), Std.int(FlxG.height - FlxG.width / 4), 0xFFC24B99, !hitboxPos));
-			add(buttonDown = createHint(FlxG.width / 4, fir, Std.int(FlxG.width / 4), Std.int(FlxG.height - FlxG.width / 4), 0xFF00FFFF, !hitboxPos));
-			add(buttonUp = createHint(FlxG.width / 2, fir, Std.int(FlxG.width / 4), Std.int(FlxG.height - FlxG.width / 4), 0xFF12FA05, !hitboxPos));
-			add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), fir, Std.int(FlxG.width / 4), Std.int(FlxG.height - FlxG.width / 4), 0xFFF9393F, !hitboxPos));
+			final fir:Int = (hitboxPos ? 0 : Std.int(FlxG.height / 4));
+			final oes:Int = (hitboxPos ? Std.int(FlxG.height * (3/4)) : 0);
+			add(buttonLeft = createHint(0, fir, Std.int(FlxG.width / 4), Std.int(FlxG.height * (3/4)), 0xFFC24B99, !hitboxPos));
+			add(buttonDown = createHint(FlxG.width / 4, fir, Std.int(FlxG.width / 4), Std.int(FlxG.height * (3/4)), 0xFF00FFFF, !hitboxPos));
+			add(buttonUp = createHint(FlxG.width / 2, fir, Std.int(FlxG.width / 4), Std.int(FlxG.height * (3/4)), 0xFF12FA05, !hitboxPos));
+			add(buttonRight = createHint((FlxG.width / 2) + (FlxG.width / 4), fir, Std.int(FlxG.width / 4), Std.int(FlxG.height * (3/4)), 0xFFF9393F, !hitboxPos));
 			add(buttonExtra = createHint(0, oes, Std.int(FlxG.width), Std.int(FlxG.width / 4), 0xA6FF00, hitboxPos));
 		}
 
