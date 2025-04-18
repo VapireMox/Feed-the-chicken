@@ -75,8 +75,6 @@ class CopyState extends funkin.backend.MusicBeatState
 			return;
 		}
 
-		NativeAPI.showMessageBox("Notice", "Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process");
-
 		shouldCopy = true;
 
 		add(new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d));

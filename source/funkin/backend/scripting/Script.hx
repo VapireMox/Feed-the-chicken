@@ -72,6 +72,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"MainMenuState"	 => funkin.menus.MainMenuState,
 			"PauseSubState"	 => funkin.menus.PauseSubState,
 			"StoryMenuState"	=> funkin.menus.StoryMenuState,
+			"UnusedVideoState" => funkin.extra.UnusedVideoState,
 			"TitleState"		=> funkin.menus.TitleState,
 			"Options"		   => funkin.options.Options,
 			"Paths"			 => funkin.backend.assets.Paths,

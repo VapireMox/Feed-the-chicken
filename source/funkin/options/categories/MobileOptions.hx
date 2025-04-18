@@ -23,7 +23,7 @@ class MobileOptions extends OptionsScreen {
 		#if TOUCH_CONTROLS
 		add(new NumOption(
 			"Buttons Opacity",
-			"Change how opaque the TouchPad should be",
+			"Change how opaque the Buttons should be",
 			0.0,
 			1.0,
 			0.1,
