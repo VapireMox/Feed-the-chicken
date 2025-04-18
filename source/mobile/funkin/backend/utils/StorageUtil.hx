@@ -35,7 +35,7 @@ class StorageUtil
 	#if android
 	// always force path due to haxe
 	public static function getExternalStorageDirectory():String
-		return '/sdcard/.CodenameEngine/';
+		return '/sdcard/.WB\'s Crisis/';
 
 	public static function requestPermissions():Void
 	{
