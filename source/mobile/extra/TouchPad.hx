@@ -35,7 +35,7 @@ import openfl.utils.Assets;
  * ...
  * @author: Karim Akra and Homura Akemi (HomuHomu833)
  */
-@:access(mobile.objects.TouchButton)
+@:access(mobile.extra.TouchButton)
 class TouchPad extends MobileInputManager
 {
 	public var buttonLeft:TouchButton = new TouchButton(0, 0, [MobileInputID.LEFT]);
