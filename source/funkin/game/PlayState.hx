@@ -342,7 +342,7 @@ class PlayState extends MusicBeatState
 	//lol ---qqqeb
 	public var camBars:FlxCamera;
 	//......
-	public var camOther:FlxCamera
+	public var camOther:FlxCamera;
 
 	/**
 	 * The player's current score.
