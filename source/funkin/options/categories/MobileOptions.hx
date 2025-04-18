@@ -49,14 +49,7 @@ class MobileOptions extends OptionsScreen {
 		final lastScreenTimeOut:Bool = Options.screenTimeOut;
 		if (lastScreenTimeOut != Options.screenTimeOut) LimeSystem.allowScreenTimeout = Options.screenTimeOut;
 		#end
-		#if TOUCH_CONTROLS
-		final lastOldPadTexture:Bool = Options.oldPadTexture;
-		if (lastOldPadTexture != Options.oldPadTexture)
-		{
-			MusicBeatState.getState().removeTouchPad();
-			MusicBeatState.getState().addTouchPad("LEFT_FULL", "A_B");
-		}
-		#end
+
 		super.changeSelection(el, force);
 	}
 
