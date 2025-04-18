@@ -24,6 +24,7 @@ package mobile.extra;
 
 #if TOUCH_CONTROLS
 import openfl.display.BitmapData;
+import openfl.display.GradientType;
 import openfl.display.Shape;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSignal.FlxTypedSignal;
