@@ -30,6 +30,12 @@ class MobileOptions extends OptionsScreen {
 			"controlsAlpha",
 			changeTouchPadAlpha));
 		add(new ArrayOption(
+			"Hitbox Position",
+			"Choose The Hitbox Was Down Or Up When Appeared Extra Button",
+			["BOTTOM", "TOP"],
+			["bottom", "top"],
+			"hitboxPos"));
+		add(new ArrayOption(
 			"Hitbox Design",
 			"Choose how your Hitbox should look like!",
 			['noGradient', 'noGradientOld', 'gradient', 'hidden'],

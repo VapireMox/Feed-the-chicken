@@ -33,6 +33,7 @@ class Options
 	public static var splashesEnabled:Bool = true;
 	public static var hitWindow:Float = 250;
 	public static var songOffset:Float = 0;
+	public static var splashSkin:String = "default";
 	public static var framerate:Int = #if mobile 60 #else 120 #end;
 	public static var gpuOnlyBitmaps:Bool = #if (mac || web || mobile) false #else true #end; // causes issues on mac, web and mobile
 
@@ -46,6 +47,7 @@ class Options
 	#end
 	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
+	public static var hitboxPos:String = "BOTTOM";
 
 	/**
 	 * EDITORS SETTINGS
