@@ -430,7 +430,7 @@ class Controls extends FlxActionSet
 	
 	@:noCompletion
 	private function get_touchC():Bool
-		return #if TOUCH_CONTROLS Options.touchPadAlpha >= 0.1 #else false #end;
+		return #if TOUCH_CONTROLS Options.controlsAlpha >= 0.1 #else false #end;
 
 	// inline
 	public function checkByName(name:Action):Bool

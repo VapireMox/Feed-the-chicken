@@ -44,12 +44,8 @@ class Options
 	#if mobile
 	public static var screenTimeOut:Bool = false;
 	#end
-	public static var extraHints:String = "NONE";
-	public static var hitboxPos:Bool = true;
 	public static var hitboxType:String = 'gradient';
-	public static var hitboxAlpha:Float = FlxG.onMobile ? 0.6 : 0;
-	public static var oldPadTexture:Bool = false;
-	public static var touchPadAlpha:Float = FlxG.onMobile ? 0.6 : 0;
+	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
 
 	/**
 	 * EDITORS SETTINGS

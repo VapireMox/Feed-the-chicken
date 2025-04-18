@@ -25,6 +25,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSignal.FlxTypedSignal;
 import haxe.io.Path;
 import funkin.backend.system.Conductor;
 import funkin.game.cutscenes.*;
@@ -80,6 +81,10 @@ class PlayState extends MusicBeatState
 	 */
 	public static var coopMode:Bool = false;
 
+	/**
+	 * 意义不大，只是图个方便
+	 */
+	public var onSetVariable:FlxTypedSignal<String->Dynamic->Bool->Void> = new FlxTypedSignal<String->Dynamic->Bool->Void>();
 	/**
 	 * Script Pack of all the scripts being ran.
 	 */
@@ -139,6 +144,28 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide) private function set_downscroll(v:Bool) {return camHUD.downscroll = v;}
 	@:dox(hide) private function get_downscroll():Bool  {return camHUD.downscroll;}
+	/**
+	 * 哭笑
+	 */
+	public var qqqeb(get, set):Bool;
+	
+	@:noCompletion function get_qqqeb():Bool {
+		return camHUD.visible;
+	}
+	@:noCompletion function set_qqqeb(val:Bool) {
+		return camHUD.visible = val;
+	}
+	/**
+	 * xswl
+	 */
+	public var msZY(get, set):Float;
+
+	@:noCompletion function get_msZY():Float {
+		return camHUD.alpha;
+	}
+	@:noCompletion function set_msZY(val:Float):Float {
+		return camHUD.alpha = val;
+	}
 
 	/**
 	 * Instrumental sound (Inst.ogg).
@@ -253,7 +280,16 @@ class PlayState extends MusicBeatState
 	/**
 	 * Current health. Goes from 0 to maxHealth (defaults to 2)
 	 */
-	public var health:Float = 1;
+	public var health(default, set):Float = 1;
+	
+	@:noCompletion private function set_health(val:Float):Float {
+		if(onSetVariable != null) onSetVariable.dispatch("health", val, false);
+	
+		health = val;
+		if(onSetVariable != null) onSetVariable.dispatch("health", val, true);
+		
+		return val;
+	}
 
 	/**
 	 * Maximum health the player can have. Defaults to 2.
@@ -302,15 +338,38 @@ class PlayState extends MusicBeatState
 	 * Camera for the game (stages, characters)
 	 */
 	public var camGame:FlxCamera;
+	
+	//lol ---qqqeb
+	public var camBars:FlxCamera;
+	//......
+	public var camOther:FlxCamera
 
 	/**
 	 * The player's current score.
 	 */
 	public var songScore:Int = 0;
+
+	@:noCompletion private function set_songScore(val:Int):Int {
+		if(onSetVariable != null) onSetVariable.dispatch("songScore", val, false);
+	
+		songScore = val;
+		if(onSetVariable != null) onSetVariable.dispatch("songScore", val, true);
+		
+		return val;
+	}
 	/**
 	 * The player's amount of misses.
 	 */
 	public var misses:Int = 0;
+
+	@:noCompletion private function set_misses(val:Int):Int {
+		if(onSetVariable != null) onSetVariable.dispatch("misses", val, false);
+	
+		misses = val;
+		if(onSetVariable != null) onSetVariable.dispatch("misses", val, true);
+
+		return val;
+	}
 	/**
 	 * The player's accuracy (shortcut to `accuracyPressedNotes / totalAccuracyAmount`).
 	 */
@@ -564,6 +623,12 @@ class PlayState extends MusicBeatState
 		(scripts = new ScriptPack("PlayState")).setParent(this);
 
 		camGame = camera;
+		camBars = new FlxCamera();
+		FlxG.cameras.add(camBars, false);
+		camBars.bgColor.alpha = 0;
+		camOther = new FlxCamera();
+		FlxG.cameras.add(camOther, false);
+		camOther.bgColor = 0;
 		FlxG.cameras.add(camHUD = new HudCamera(), false);
 		camHUD.bgColor.alpha = 0;
 
@@ -1585,19 +1650,35 @@ class PlayState extends MusicBeatState
 			else
 				FlxG.switchState(new FreeplayState());
 		}
+		
+		scripts.call("onNextSong", []);
 	}
 
 	public function registerSmoothTransition() {
-		smoothTransitionData = {
-			stage: curStage,
-			camX: FlxG.camera.scroll.x,
-			camY: FlxG.camera.scroll.y,
-			camFollowX: camFollow.x,
-			camFollowY: camFollow.y,
-			camZoom: FlxG.camera.zoom
-		};
-		MusicBeatState.skipTransIn = true;
-		MusicBeatState.skipTransOut = true;
+		var event:RegisterSmoothEvent = scripts.event("onRegisterSmoothTransition", EventManager.get(RegisterSmoothEvent).recycle(
+			{
+				stage: curStage,
+				camX: FlxG.camera.scroll.x,
+				camY: FlxG.camera.scroll.y,
+				camFollowX: camFollow.x,
+				camFollowY: camFollow.y,
+				camZoom: FlxG.camera.zoom
+			},
+			true,
+			true
+		));
+
+		if(event.cancelled) return;
+		
+		smoothTransitionData = event.smoothTransition;
+
+		if(event.skipTransCancelled) {
+			MusicBeatState.skipTransIn = false;
+		        MusicBeatState.skipTransOut = false;
+		}else {
+		        MusicBeatState.skipTransIn = event.skipTransIn;
+		        MusicBeatState.skipTransOut = event.skipTransOut;
+		}
 	}
 
 	private inline function keyShit():Void

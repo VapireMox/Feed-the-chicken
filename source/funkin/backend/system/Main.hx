@@ -16,6 +16,7 @@ import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import funkin.backend.system.modules.*;
+import funkin.backend.system.debugText.DebugPrint;
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
@@ -39,7 +40,10 @@ class Main extends Sprite
 	public static var noTerminalColor:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
-	public static var framerateSprite:funkin.backend.system.framerate.Framerate;
+	
+	public var debugPrintLog:DebugPrint = new DebugPrint(new TextFormat("assets/fonts/COMIC.TTF", 24), true);
+	
+	public var framerateSprite:funkin.backend.system.framerate.Framerate;
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels).
@@ -80,6 +84,8 @@ class Main extends Sprite
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
+		
+		addChild(debugPrintLog);
 
 		#if !web
 		addChild(framerateSprite);
@@ -137,9 +143,13 @@ class Main extends Sprite
 		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
+		
+		//我是废物
+		funkin.extra.UnusedVideoState.init();
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.init();
 		#end
+		funkin.backend.scripting.addons.AddonsManager.init();
 
 		#if (sys && TEST_BUILD)
 			trace("Used cne test / cne build. Switching into source assets.");

@@ -117,7 +117,7 @@ class TouchPad extends MobileInputManager
 
 		curDPadMode = DPad;
 		curActionMode = Action;
-		alpha = Options.touchPadAlpha;
+		alpha = Options.controlsAlpha;
 		scrollFactor.set();
 		updateTrackedButtons();
 

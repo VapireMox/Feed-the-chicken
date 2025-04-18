@@ -16,6 +16,7 @@ import funkin.backend.scripting.events.DirectionAnimEvent;
 import funkin.backend.scripting.events.PlayAnimEvent;
 import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.backend.scripting.events.PointEvent;
+import funkin.backend.scripting.events.TryDanceEvent;
 import funkin.backend.system.Conductor;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.interfaces.IOffsetCompatible;
@@ -75,13 +76,21 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 		xml = getXMLFromCharName(this);
 
-		if(!disableScripts)
+		var globalScript:Script = null;
+		if(!disableScripts) {
+			//角色全局脚本，使用谨慎！
+			globalScript = Script.create(Paths.script("data/characters/global"));
 			script = Script.create(Paths.script(Path.withoutExtension(Paths.xml('characters/$curCharacter')), null, true));
-		else
+		}else
 			script = new DummyScript(curCharacter);
+		if(globalScript != null) {
+			globalScript.load();
+		}
 		script.load();
 
 		buildCharacter(xml);
+		if(globalScript != null)
+			scripts.add(globalScript);
 		scripts.call("create");
 
 		if (script == null)
@@ -133,6 +142,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			tryDance();
 
 		__lockAnimThisFrame = false;
+
+		scripts.call("postUpdate", [elapsed]);
 	}
 
 	private var danced:Bool = false;
@@ -151,18 +162,28 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	public function tryDance() {
-		switch (lastAnimContext) {
+		//我超爱的啦
+		var event = EventManager.get(TryDanceEvent).recycle(lastAnimContext, Conductor.stepCrochet * holdTime);
+		scripts.call("onTryDance", [event]);
+
+		if(event.cancelled) return;
+		
+		switch (event.lastAnimContext) {
 			case SING | MISS:
-				if (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition)
-					dance();
+				if(!event.singAnimCancelled)
+				        if (lastHit + (event.singHoldTime) < Conductor.songPosition)
+					        dance();
 			case DANCE:
-				dance();
+				if(!event.danceAnimCancelled)
+				        dance();
 			case LOCK:
-				if (getAnimName() == null)
-					dance();
+				if(!event.lockAnimCancelled)
+				        if (getAnimName() == null)
+					        dance();
 			default:
-				if (getAnimName() == null || isAnimFinished())
-					dance();
+				if(!event.defaultAnimCancelled)
+				        if (getAnimName() == null || isAnimFinished())
+					        dance();
 		}
 	}
 
