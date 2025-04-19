@@ -100,24 +100,33 @@ class VirtualPad extends MobileInputManager
 		var button = new TouchButton(X, Y, IDs);
 		var buttonLabelGraphicPath:String = "";
 
-		var buttonGraphicPath:String = "";
+		var frames:FlxGraphic;
 		for (folder in [
 			'${ModsFolder.modsPath}${ModsFolder.currentModFolder}/mobile',
 			Paths.getPath('mobile')
 		])
-			for (file in ["bg", Graphic.toUpperCase()])
+			for (file in [Graphic.toUpperCase()])
 			{
-				final path:String = '${folder}/images/vritualpad/${file}.png';
+				final path:String = '${folder}/images/virtualpad/${file}.png';
 				if (FileSystem.exists(path))
-					if (file == "bg")
-						buttonGraphicPath = path;
-					else
-						buttonLabelGraphicPath = path;
+					buttonLabelGraphicPath = path;
 			}
+
+		if (FileSystem.exists(buttonLabelGraphicPath))
+			frames = FlxGraphic.fromBitmapData(BitmapData.fromBytes(File.getBytes(buttonLabelGraphicPath)));
+		else
+			frames = FlxGraphic.fromBitmapData(Assets.getBitmapData('assets/mobile/images/virtualpad/default.png'));
+
+		button.antialiasing = Options.antialiasing;
+		button.frames = FlxTileFrames.fromGraphic(frames, FlxPoint.get(Std.int(frames.width / 2), frames.height));
+
+		if (Color != -1)
+			button.color = Color;
 
 		button.label = new FlxSprite();
 		button.loadGraphic(buttonGraphicPath);
 		button.label.loadGraphic(buttonLabelGraphicPath);
+		button.scale.set(0.243, 0.243);
 		button.label.antialiasing = button.antialiasing = Options.antialiasing;
 		button.color = Color;
 
