@@ -33,7 +33,7 @@ import openfl.utils.Assets;
 
 /**
  * ...
- * @author: Karim Akra and Homura Akemi (HomuHomu833)
+ * @base author: Karim Akra and Homura Akemi (HomuHomu833)
  */
 @:access(mobile.extra.TouchButton)
 class VirtualPad extends MobileInputManager
@@ -42,7 +42,7 @@ class VirtualPad extends MobileInputManager
 	public var buttonUp:TouchButton = new TouchButton(0, 0, [MobileInputID.UP]);
 	public var buttonRight:TouchButton = new TouchButton(0, 0, [MobileInputID.RIGHT]);
 	public var buttonDown:TouchButton = new TouchButton(0, 0, [MobileInputID.DOWN]);
-	public var buttonB:TouchButton = new TouchButton(0, 0, [MobileInputID.B]);
+	public var buttonExtra:TouchButton = new TouchButton(0, 0, [MobileInputID.EXTRA_1]);
 
 	public static var instance:VirtualPad;
 	public static var curStatus:String = "NONE";
@@ -57,16 +57,6 @@ class VirtualPad extends MobileInputManager
 				throw 'The VirtualPad Status "$Status" doesn\'t exist.';
 
 			for (buttonData in MobileData.yuanDpadModes.get(Status).buttons)
-			{
-				Reflect.setField(this, buttonData.button,
-					createButton(buttonData.x, buttonData.y, buttonData.graphic, getColorFromString(buttonData.color),
-						Reflect.getProperty(this, buttonData.button).IDs));
-				add(Reflect.field(this, buttonData.button));
-			}
-		}
-
-		if(extraButton && Status != "NONE") {
-			for (buttonData in MobileData.yuanActionModes.get("B").buttons)
 			{
 				Reflect.setField(this, buttonData.button,
 					createButton(buttonData.x, buttonData.y, buttonData.graphic, getColorFromString(buttonData.color),
@@ -122,13 +112,6 @@ class VirtualPad extends MobileInputManager
 
 		if (Color != -1)
 			button.color = Color;
-
-		button.label = new FlxSprite();
-		button.loadGraphic(buttonGraphicPath);
-		button.label.loadGraphic(buttonLabelGraphicPath);
-		button.scale.set(0.243, 0.243);
-		button.label.antialiasing = button.antialiasing = Options.antialiasing;
-		button.color = Color;
 
 		button.updateHitbox();
 		button.updateLabelPosition();

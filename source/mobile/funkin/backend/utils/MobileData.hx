@@ -38,8 +38,7 @@ class MobileData
 	public static var actionModes:Map<String, TouchButtonsData> = new Map();
 	public static var dpadModes:Map<String, TouchButtonsData> = new Map();
 	
-	public static var yuanActionModes:Map<String, TouchButtonsData> = new Map();
-	public static var yuanDpadModes:Map<String, TouchButtonsData> = new Map();
+	public static var yuanshenModes:Map<String, TouchButtonsData> = new Map();
 
 	public static var save:FlxSave;
 
@@ -58,8 +57,7 @@ class MobileData
 				setMap('$folder/ActionModes', actionModes);
 			}
 		
-		startYuanshen(true, yuanDpadModes);
-		startYuanshen(false, yuanActionModes);
+		startYuanshen(yuanshenModes);
 	}
 
 	public static function setMap(folder:String, map:Map<String, TouchButtonsData>)
@@ -78,7 +76,6 @@ class MobileData
 	}
 	
 	private static function startYuanshen(timi:Bool, map:Map<String, TouchButtonsData>):Map<String, TouchButtonsData> {
-			if(timi) {
 				map.set("LEFT_FULL", cast {
 					buttons: [
 						{
@@ -108,6 +105,13 @@ class MobileData
 							x: 207,
 							y: FlxG.height - 246,
 							color: "0xFFFF0000"
+						},
+						{
+							button: "buttonExtra",
+							graphic: "default",
+							x: FlxG.width - 132,
+							y: FlxG.height - 131,
+							color: "0xFFFFCB00"
 						}
 					]
 				});
@@ -140,22 +144,16 @@ class MobileData
 							x: FlxG.width - 132,
 							y: FlxG.height - 305,
 							color: "0xFFFF0000"
-						}
-					]
-				});
-			}else {
-				map.set("B", cast {
-					buttons: [
+						},
 						{
-							button: "buttonB",
+							button: "buttonExtra",
 							graphic: "default",
-							x: FlxG.width - 132,
+							x: 0,
 							y: FlxG.height - 131,
 							color: "0xFFFFCB00"
 						}
 					]
 				});
-			}
 			
 			return map;
 	}
