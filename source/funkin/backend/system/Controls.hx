@@ -505,7 +505,7 @@ class Controls extends FlxActionSet
 			case NOTE_DOWN: _noteDown;
 			case NOTE_LEFT: _noteLeft;
 			case NOTE_RIGHT: _noteRight;
-			case DODGE: _dodge
+			case DODGE: _dodge;
 			case ACCEPT: _accept;
 			case BACK: _back;
 			case PAUSE: _pause;
