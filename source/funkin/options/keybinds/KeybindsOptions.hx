@@ -67,6 +67,15 @@ class KeybindsOptions extends MusicBeatSubstate {
 			]
 		},
 		{
+			name: 'Extra',
+			settings: [
+				{
+					name: "Game Dodge",
+					control: "DODGE"
+				}
+			]
+		},
+		{
 			name: 'Engine',
 			settings: [
 				{

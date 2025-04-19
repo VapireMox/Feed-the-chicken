@@ -33,6 +33,7 @@ class Options
 	public static var splashesEnabled:Bool = true;
 	public static var hitWindow:Float = 250;
 	public static var songOffset:Float = 0;
+	public static var easyMode:Bool = false;
 	public static var splashSkin:String = "default";
 	public static var framerate:Int = #if mobile 60 #else 120 #end;
 	public static var gpuOnlyBitmaps:Bool = #if (mac || web || mobile) false #else true #end; // causes issues on mac, web and mobile
@@ -48,6 +49,15 @@ class Options
 	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
 	public static var hitboxPos:String = "BOTTOM";
+	public static var buttonsType:String = "RIGHT_FULL";
+	//顺序：左→下→上→右→额外按键（真怕自己忘记了😅
+	public static var buttonsCustomPos:Array<Array<Float>> = [
+		[FlxG.width - 384, FlxG.height - 305],
+		[FlxG.width - 258, FlxG.height - 197],
+		[FlxG.width - 258, FlxG.height - 404],
+		[FlxG.width - 132, FlxG.height - 305],
+		[0, FlxG.height - 131],
+	];
 
 	/**
 	 * EDITORS SETTINGS
@@ -90,6 +100,7 @@ class Options
 	public static var P1_DOWN:Array<FlxKey> = [S];
 	public static var P1_UP:Array<FlxKey> = [W];
 	public static var P1_RIGHT:Array<FlxKey> = [D];
+	public static var P1_DODGE:Array<FlxKey> = [SPACE];
 	public static var P1_ACCEPT:Array<FlxKey> = [ENTER];
 	public static var P1_BACK:Array<FlxKey> = [BACKSPACE];
 	public static var P1_PAUSE:Array<FlxKey> = [ENTER];

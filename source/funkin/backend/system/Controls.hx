@@ -40,6 +40,10 @@ enum abstract Action(String) to String from String {
 	var NOTE_LEFT_R = "note-left-release";
 	var NOTE_RIGHT_R = "note-right-release";
 	var NOTE_DOWN_R = "note-down-release";
+	
+	var DODGE = "game-dodge";
+	var DODGE_P = "game-dodge-press";
+	var DODGE_R = "game-dodge-release";
 
 	var ACCEPT = "accept";
 	var BACK = "back";
@@ -70,6 +74,9 @@ enum Control
 	NOTE_LEFT;
 	NOTE_RIGHT;
 	NOTE_DOWN;
+	
+	DODGE;
+	
 	RESET;
 	ACCEPT;
 	BACK;
@@ -118,6 +125,10 @@ class Controls extends FlxActionSet
 	var _noteLeftR = new FlxActionDigital(Action.NOTE_LEFT_R);
 	var _noteRightR = new FlxActionDigital(Action.NOTE_RIGHT_R);
 	var _noteDownR = new FlxActionDigital(Action.NOTE_DOWN_R);
+	
+	var _dodge = new FlxActionDigital(Action.DODGE);
+	var _dodgeP = new FlxActionDigital(Action.DODGE_P);
+	var _dodgeR = new FlxActionDigital(Action.DODGE_R);
 
 	var _accept = new FlxActionDigital(Action.ACCEPT);
 	var _back = new FlxActionDigital(Action.BACK);
@@ -326,6 +337,21 @@ class Controls extends FlxActionSet
 
 	inline function set_NOTE_DOWN_R(val)
 		return @:privateAccess _noteDownR._checked = val;
+	
+	public var DODGE_P(get, never):Bool;
+	inline function get_DODGE_P():Bool {
+		return _dodgeP.check();
+	}
+	
+	public var DODGE(get, never):Bool;
+	inline function get_DODGE():Bool {
+		return _dodge.check();
+	}
+	
+	public var DODGE_R(get, never):Bool;
+	inline function get_DODGE_R():Bool {
+		return _dodgeR.check();
+	}
 
 	public var ACCEPT(get, set):Bool;
 
@@ -407,6 +433,10 @@ class Controls extends FlxActionSet
 		add(_noteLeftR);
 		add(_noteRightR);
 		add(_noteDownR);
+		
+		add(_dodge);
+		add(_dodgeP);
+		add(_dodgeR);
 
 		add(_accept);
 		add(_back);
@@ -475,6 +505,7 @@ class Controls extends FlxActionSet
 			case NOTE_DOWN: _noteDown;
 			case NOTE_LEFT: _noteLeft;
 			case NOTE_RIGHT: _noteRight;
+			case DODGE: _dodge
 			case ACCEPT: _accept;
 			case BACK: _back;
 			case PAUSE: _pause;
@@ -532,6 +563,10 @@ class Controls extends FlxActionSet
 				func(_down, PRESSED);
 				func(_downP, JUST_PRESSED);
 				func(_downR, JUST_RELEASED);
+			case DODGE:
+				func(_dodge, PRESSED);
+				func(_dodgeP, JUST_PRESSED);
+				func(_dodgeR, JUST_RELEASED);
 			case ACCEPT:
 				func(_accept, JUST_PRESSED);
 			case BACK:
