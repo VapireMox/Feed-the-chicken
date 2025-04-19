@@ -3,7 +3,7 @@ package funkin.backend.utils.native;
 #if android
 @:cppFileCode("
 	#include <string>
-	#include <fstream>
+	#include <istream>
 	#include <stdio.h>
 ")
 class Android

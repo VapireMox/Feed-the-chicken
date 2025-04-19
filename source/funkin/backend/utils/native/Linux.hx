@@ -4,7 +4,7 @@ package funkin.backend.utils.native;
 @:cppFileCode("#include <stdio.h>")
 @:cppFileCode("
 	#include <string>
-	#include <fstream>
+	#include <istream>
 ")
 class Linux {
 	@:functionCode('
