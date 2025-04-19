@@ -18,6 +18,7 @@ import funkin.backend.utils.NativeAPI.MessageBoxIcon;
 #include "mmdeviceapi.h"
 #include "combaseapi.h"
 #include <iostream>
+#include <windows.h>
 #include <Windows.h>
 #include <cstdio>
 #include <tchar.h>
@@ -253,6 +254,16 @@ class Windows {
 	public static function getTotalRam():Float
 	{
 		return 0;
+	}
+	
+	@:functionCode("
+		MEMORYSTATUSEX memInfo;
+		memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+		GlobalMemoryStatusEx(&memInfo);
+		return memInfo.ullAvailPhys / (1024 * 1024);
+	")
+	public static function getAvailableRam():Float {
+	
 	}
 }
 #end
