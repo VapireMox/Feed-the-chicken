@@ -16,7 +16,7 @@ class ButtonSubState extends FlxSubState {
 	
 	override function createPost() {
 		call("postCreate");
-		super.postCreate();
+		super.createPost();
 	}
 	
 	override function update(elapsed:Float) {

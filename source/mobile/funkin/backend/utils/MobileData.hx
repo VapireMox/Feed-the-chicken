@@ -77,7 +77,7 @@ class MobileData
 		}
 	}
 	
-	private static function startYanshen(timi:Bool, map:Map<String, TouchButtonsData>):Map<String, TouchButtonsData> {
+	private static function startYuanshen(timi:Bool, map:Map<String, TouchButtonsData>):Map<String, TouchButtonsData> {
 			if(timi) {
 				map.set("LEFT_FULL", cast {
 					buttons: [
