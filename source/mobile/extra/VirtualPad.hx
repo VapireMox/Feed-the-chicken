@@ -20,7 +20,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package extra.extra;
+package mobile.extra;
 
 #if TOUCH_CONTROLS
 import flixel.graphics.FlxGraphic;
