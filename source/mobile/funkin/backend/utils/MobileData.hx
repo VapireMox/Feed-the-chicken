@@ -37,6 +37,9 @@ class MobileData
 {
 	public static var actionModes:Map<String, TouchButtonsData> = new Map();
 	public static var dpadModes:Map<String, TouchButtonsData> = new Map();
+	
+	public static var yuanActionModes:Map<String, TouchButtonsData> = new Map();
+	public static var yuanDpadModes:Map<String, TouchButtonsData> = new Map();
 
 	public static var save:FlxSave;
 
@@ -54,6 +57,9 @@ class MobileData
 				setMap('$folder/DPadModes', dpadModes);
 				setMap('$folder/ActionModes', actionModes);
 			}
+		
+		startYuanshen(true, yuanDpadModes);
+		startYuanshen(false, yuanActionModes);
 	}
 
 	public static function setMap(folder:String, map:Map<String, TouchButtonsData>)
@@ -69,6 +75,89 @@ class MobileData
 				map.set(mapKey, json);
 			}
 		}
+	}
+	
+	private static function startYanshen(timi:Bool, map:Map<String, TouchButtonsData>):Map<String, TouchButtonsData> {
+			if(timi) {
+				map.set("LEFT_FULL", cast {
+					buttons: [
+						{
+							button: "buttonUp",
+							graphic: "up",
+							x: 105,
+							y: FlxG.height - 356,
+							color: "0xFF00FF00"
+						},
+						{
+							button: "buttonDown",
+							graphic: "down",
+							x: 105,
+							y: FlxG.height - 131,
+							color: "0xFF00FFFF"
+						},
+						{
+							button: "buttonLeft",
+							graphic: "left",
+							x: 0,
+							y: FlxG.height - 246,
+							color: "0xFFFF00FF"
+						},
+						{
+							button: "buttonRight",
+							graphic: "right",
+							x: 207,
+							y: FlxG.height - 246,
+							color: "0xFFFF0000"
+						}
+					]
+				});
+				map.set("RIGHT_FULL", cast {
+					buttons: [
+						{
+							button: "buttonUp",
+							graphic: "up",
+							x: FlxG.width - 258,
+							y: FlxG.height - 404,
+							color: "0xFF00FF00"
+						},
+						{
+							button: "buttonDown",
+							graphic: "down",
+							x: FlxG.width - 258,
+							y: FlxG.height - 197,
+							color: "0xFF00FFFF"
+						},
+						{
+							button: "buttonLeft",
+							graphic: "left",
+							x: FlxG.width - 384,
+							y: FlxG.height - 305,
+							color: "0xFFFF00FF"
+						},
+						{
+							button: "buttonRight",
+							graphic: "right",
+							x: FlxG.width - 132,
+							y: FlxG.height - 305,
+							color: "0xFFFF0000"
+						}
+					]
+				});
+			}else {
+				map.set("B", cast {
+					buttons: [
+						{
+							button: "buttonB",
+							graphic: "default",
+							x: FlxG.width - 132,
+							y: FlxG.height - 131,
+							color: "0xFFFFCB00"
+						}
+					]
+				});
+			}
+			
+			return map;
 	}
 }
 
