@@ -1,7 +1,11 @@
 package funkin.backend.utils.native;
 
 #if android
-@:cppFileCode("#include <string>")
+@:cppFileCode("
+	#include <string>
+	#include <fstream>
+	#include <cstdio>
+")
 class Android
 {
 	@:functionCode('
