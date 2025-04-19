@@ -37,8 +37,8 @@ import openfl.geom.Matrix;
  */
 class Hitbox extends MobileInputManager
 {
-	static inline var hitboxPos(get, never):Bool;
-	@:noCompletion static inline function get_hitboxPos():Bool
+	static var hitboxPos(get, never):Bool;
+	@:noCompletion static function get_hitboxPos():Bool
 		return Options.hitboxPos.toLowerCase() == "bottom";
 
 	final offsetFir:Int = (hitboxPos ? Std.int(FlxG.height / 4) * 3 : 0);
@@ -133,7 +133,7 @@ class Hitbox extends MobileInputManager
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: Options.controlsApha}, Options.controlsApha / 100, {
+				hintTween = FlxTween.tween(hint, {alpha: Options.controlsAlpha}, Options.controlsAlpha / 100, {
 					ease: FlxEase.circInOut,
 					onComplete: (twn:FlxTween) -> hintTween = null
 				});
@@ -146,7 +146,7 @@ class Hitbox extends MobileInputManager
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, Options.controlsApha / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, Options.controlsAlpha / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: (twn:FlxTween) -> hintTween = null
 				});
