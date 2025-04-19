@@ -53,10 +53,10 @@ class VirtualPad extends MobileInputManager
 
 		if (Status != "NONE")
 		{
-			if (!MobileData.yanshenModes.exists(Status))
+			if (!MobileData.yuanshenModes.exists(Status))
 				throw 'The VirtualPad Status "$Status" doesn\'t exist.';
 
-			for (buttonData in MobileData.yuanModes.get(Status).buttons)
+			for (buttonData in MobileData.yuanshenModes.get(Status).buttons)
 			{
 				Reflect.setField(this, buttonData.button,
 					createButton(buttonData.x, buttonData.y, buttonData.graphic, getColorFromString(buttonData.color),
